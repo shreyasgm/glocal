@@ -6,6 +6,7 @@ docs/**/*.png
 .Rhistory
 .RData
 data/
+src/raster_aggregations/gdelt/masterfilelist.txt
 
 # Data
 *.csv
