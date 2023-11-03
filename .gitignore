@@ -20,7 +20,6 @@ src/raster_aggregations/gdelt/masterfilelist.txt
 *.tex
 data/
 tables/
-supporting_data/
 Data/
 Downloads/
 Shapefiles/
