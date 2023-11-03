@@ -1,0 +1,263 @@
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+setwd(here())
+```
+
+```{r data setup, include=FALSE}
+pathfinderw <- read.csv('pathfinder.csv')
+pathfinderw <- pathfinderw[1,1]
+setwd(pathfinderw)
+metaw <- read.csv('meta.csv')
+varsw <- metaw[1,1]
+timespecw <- metaw[2,1]
+timenamew <- metaw[3,1]
+spatialspecw <- metaw[4,1]
+simple_summaryw  <- read.csv('simple_summary.csv')
+boundsw  <- read.csv('bounds.csv')
+complete_sharew  <- read.csv('complete_share.csv')
+year_boundw  <- read.csv('year_bound.csv')
+reg_completenessw  <- read.csv('reg_completeness.csv')
+reg_year_sharew  <- read.csv('reg_year_share.csv')
+regs_zero_compw  <- read.csv('regs_zero_comp.csv')
+regs_zero_compw <- regs_zero_compw[,1] %>% as.vector()
+regs_q1_compw <- read.csv('regs_q1_comp.csv')
+regs_q1_compw <- regs_q1_compw[,1] %>% as.vector()
+regs_q2_compw <- read.csv('regs_q2_comp.csv')
+regs_q2_compw <- regs_q2_compw[,1] %>% as.vector()
+regs_q3_compw  <- read.csv('regs_q3_comp.csv')
+regs_q3_compw <- regs_q3_compw[,1] %>% as.vector()
+regs_q4_compw  <- read.csv('regs_q4_comp.csv')
+regs_q4_compw <- regs_q4_compw[,1] %>% as.vector()
+regs_total_compw  <- read.csv('regs_total_comp.csv')
+regs_total_compw <- regs_total_compw[,1] %>% as.vector()
+regs_comp_summaryw  <- read.csv('regs_comp_summary.csv')
+anom_lesserw <- read.csv('anom_lesser.csv')
+lesser_count <- nrow(anom_lesserw)
+anom_greaterw <- read.csv('anom_greater.csv')
+greater_count <- nrow(anom_greaterw)
+anom_exactw <- read.csv('anom_exact.csv')
+exact_count <- nrow(anom_exactw)
+anom_increasew <- read.csv('anom_increase.csv')
+increase_count <- nrow(anom_increasew)
+anom_decreasew <- read.csv('anom_decrease.csv')
+decrease_count <- nrow(anom_decreasew)
+paramsw <- read.csv('anomaly_parameters.csv')
+metacompletew <- read.csv('metadata_completeness.csv')
+setwd(here())
+```
+
+
+# Aggregation Report for `r varsw` in `r spatialspecw` `r timenamew`
+
+\vspace{2cm}
+
+## Simple Summary Statistics
+
+
+```{r simple summary}
+simple_summaryw
+```
+\vspace{.5cm}
+
+The skewness of `r varsw` is __`r round(simple_summaryw$skew,2)`__ which is 
+considered __`r if(simple_summaryw$skew > 5){"High"}else {"Acceptable"}`__
+
+\vspace{.1cm}
+
+`r varsw` is present in the data for __`r nrow(year_boundw)`__ years, first appearing
+in __`r min(year_boundw)`__ and most recently appearing in __`r max(year_boundw)`__.
+
+\vspace{.1cm}
+
+Below is a visualization of the distribution of `r varsw`.
+
+\vspace{.5cm}
+
+```{r pathmake, include = FALSE}
+distpath <- paste0(pathfinderw, "/Distribution.png")
+yearpath <- paste0(pathfinderw, "/Yearly_Completeness.png")
+comppath <- paste0(pathfinderw, "/Completeness_Distribution.png")
+```
+
+
+![](`r distpath`)
+
+\vspace{.5cm}
+
+## Completeness
+
+\vspace{.1cm}
+
+On average, a given year for `r varsw` will have __`r mean(complete_sharew$complete_share)`__ of
+its regions holding data and not being NA. Below is a visualization of data completeness
+over time.
+
+\vspace{.1cm}
+
+![ ](`r yearpath`)
+
+\vspace{.1cm}
+
+Spatially, __`r regs_comp_summaryw[1,2]`__ countries have no data for `r varsw`, 
+__`r regs_comp_summaryw[2,2]`__ have between 0 and 25%, __`r regs_comp_summaryw[3,2]`__ have between 25% and 50% completion, __`r regs_comp_summaryw[4,2]`__ have between 50% and 75%, __`r regs_comp_summaryw[5,2]`__ between 75% and 99% and __`r regs_comp_summaryw[6,2]`__ have data
+for every single year `r varsw` is present. This is visualized below.
+
+\vspace{.1cm}
+
+![ ](`r comppath`)
+
+\vspace{.1cm}
+
+Countries with no data are:
+
+```{r no data}
+regs_zero_compw
+```
+
+
+Countries with 0-25% data are:
+
+```{r .25 data}
+regs_q1_compw
+```
+
+
+Countries with 25% - 50% data are:
+
+```{r .5 data}
+regs_q2_compw
+```
+
+
+Countries with 50% - 75% data are:
+
+```{r .75 data}
+regs_q3_compw
+```
+
+
+Countries with 75% - 99% data are:
+
+```{r .99 data}
+regs_q4_compw
+```
+
+
+Countries with 100% data are:
+
+```{r 100 data}
+regs_total_compw
+```
+
+\vspace{.1cm}
+
+Graphs with the total completion for country can be found in the Completion PNG
+folder under `Country Totals` while completeness over time for each individual
+country can be found under `year totals` - raw data for completeness over time 
+for each region is available in the analysis_data folder, `reg_completeness.csv`
+
+## Anomalies and Outliers
+
+\vspace{.1cm}
+
+The following are the parameters specified for `r varsw`:
+
+\vspace{.1cm}
+
+```{r parameters}
+paramsw
+```
+
+\vspace{.1cm}
+
+### Values lower than expected
+
+\vspace{.1cm}
+
+`r if(is.na(paramsw[1,2])){paste0("There was no specified minimum threshold for ", varsw)} else{paste0("There are ", lesser_count, " values present below the specified anomaly threshold of ", paramsw[1,2], ". Below are a list of the first ten - the full list is available in anom_lesser.csv.")}`
+
+\vspace{.1cm}
+
+```{r lessers}
+if(is.na(paramsw[1,2])){}else{head(anom_lesserw,10)}
+```
+
+\vspace{.1cm}
+
+### Values higher than expected
+
+\vspace{.1cm}
+
+`r if(is.na(paramsw[2,2])){paste0("There was no specified maximum threshold for ", varsw)} else{paste0("There are ", greater_count, " values present above the specified anomaly threshold of ", paramsw[2,2], ". Below are a list of the first ten - the full list is available in anom_greater.csv.")}`
+
+\vspace{.1cm}
+
+```{r greaters}
+if(is.na(paramsw[2,2])){}else{head(anom_greaterw,10)}
+```
+
+\vspace{.1cm}
+
+### Flagged values
+
+\vspace{.1cm}
+
+`r if(is.na(paramsw[3,2])){paste0("There was no specified flagged value for ", varsw)} else{paste0("There are ", exact_count, " flagged values present matching ", paramsw[3,2], ". Below are a list of the first ten - the full list is available in anom_exact.csv.")}`
+
+\vspace{.1cm}
+
+```{r exacts}
+if(is.na(paramsw[3,2])){}else{head(anom_exactw,10)}
+```
+
+\vspace{.1cm}
+
+### Unexpectedly high increase
+
+\vspace{.1cm}
+
+`r if(is.na(paramsw[4,2])){paste0("There was no specified maximum increase for ", varsw)} else{paste0("There are ", increase_count, " values with an increase over the previous value above the anomaly threshold of ", paramsw[4,2], ". Below are a list of the first ten - the full list is available in anom_increase.csv.")}`
+
+\vspace{.1cm}
+
+```{r increases}
+if(is.na(paramsw[4,2])){}else{head(anom_increasew,10)}
+```
+
+\vspace{.1cm}
+
+### Unexpectedly high decrease
+
+\vspace{.1cm}
+
+`r if(is.na(paramsw[5,2])){paste0("There was no specified maximum decrease for ", varsw)} else{paste0("There are ", decrease_count, " values with a decrease from the previous value below the anomaly threshold of ", paramsw[5,2], ". Below are a list of the first ten - the full list is available in anom_decrease.csv.")}`
+
+\vspace{.1cm}
+
+```{r decreases}
+if(is.na(paramsw[5,2])){}else{head(anom_decreasew,10)}
+```
+
+\vspace{.1cm}
+
+
+## Metadata and Licensing
+
+\vspace{.1cm}
+
+The following is the status of the metadata for `r varsw`:
+
+\vspace{.1cm}
+
+```{r}
+metacompletew
+```
+
+\vspace{.3cm}
+
+__End of Report__
+

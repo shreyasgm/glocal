@@ -1,0 +1,15 @@
+<OGRVRTDataSource>
+    
+    <!-- File Geodatabase containing roads data -->
+    <OGRVRTLayer name="GRIP4_GlobalRoads">
+        <SrcDataSource>/n/holystore01/LABS/hausmann_lab/lab/glocal_aggregations/shreyas/data/raw/rasters/roads/grip/GRIP4_GlobalRoads.gdb</SrcDataSource>
+        <SrcLayer>GRIP4_GlobalRoads</SrcLayer>
+    </OGRVRTLayer>
+
+    <!-- Shapefile containing GADM administrative boundaries -->
+    <OGRVRTLayer name="gadm36_1">
+        <SrcDataSource>/n/holystore01/LABS/hausmann_lab/lab/glocal_aggregations/shreyas/data/raw/shapefiles/gadm/gadm36_1.shp</SrcDataSource>
+        <SrcLayer>gadm36_1</SrcLayer>
+    </OGRVRTLayer>
+
+</OGRVRTDataSource>

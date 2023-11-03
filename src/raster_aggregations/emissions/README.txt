@@ -1,0 +1,1 @@
+Emissions data downloaded by Gabriel from EDGAR: https://edgar.jrc.ec.europa.eu/dataset_ghg70
